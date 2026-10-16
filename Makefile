@@ -1,6 +1,6 @@
 CC=gcc
 LFLAGS=-lasan -lSDL2 -lm
-CFLAGS=-fsanitize=address -g -Wall -Wextra -Wpedantic
+CFLAGS=-fsanitize=address -Wall -Wextra -Wpedantic -g
 EXE=main
 
 HEAD=all.h
@@ -22,7 +22,7 @@ val: $(EXE)
 $(EXE): $(addsuffix .o, $(addprefix bin/, $(basename $(SRC))))
 	$(CC) $(filter %.o,$^) $(LFLAGS) -o $@
 
-bin/%.o: src/%.c
+bin/%.o: src/%.c src/all.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 bin/config.o: src/config.c

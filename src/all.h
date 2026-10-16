@@ -52,7 +52,8 @@ typedef struct
     i64 x, y;
 } ControlPoint;
 
-void glyph_draw(i64 grid_size);
+void glyph_draw(void);
+void glyph_recreate_grid(i64 new_size, Colour grid_colour);
 
 
 /* *
