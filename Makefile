@@ -1,10 +1,10 @@
 CC=gcc
-LFLAGS=-lasan -lSDL2 -lm
+LFLAGS=-lasan -lSDL3 -lm
 CFLAGS=-fsanitize=address -Wall -Wextra -Wpedantic -g
 EXE=main
 
 HEAD=all.h
-SRC=main.c render.c glyph.c global.c
+SRC=main.c render.c glyph.c global.c arena.c renderers/none.c
 
 .PHONY: clean build
 
@@ -29,4 +29,5 @@ bin/config.o: src/config.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm $(EXE) bin/*
+	-rm $(EXE) bin/*
+	mkdir bin/renderers

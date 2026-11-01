@@ -3,14 +3,14 @@
 int
 main(void)
 {
-    render_init(1920, 1080);
+    if (!render_init(1920, 1080))
+        return -1;
 
     u32 mouse_pressed_mask;
-    int mouse_x, mouse_y;
+    f32 mouse_x, mouse_y;
     SDL_GetMouseState(&mouse_x, &mouse_y);
 
     bool is_dragging_mouse = false;
-    glyph_recreate_grid(20, 0x220000);
 
     while (true)
     {
@@ -19,20 +19,16 @@ main(void)
         {
             switch (event.type)
             {
-                case SDL_QUIT:
+                case SDL_EVENT_QUIT:
                     goto exit;
-                case SDL_WINDOWEVENT:
+                case SDL_EVENT_WINDOW_RESIZED:
                 {
-                    if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-                    {
-                        render_resize(event.window.data1, event.window.data2);
-                        glyph_recreate_grid(20, 0x220000);
-                    }
+                    render_resize(event.window.data1, event.window.data2);
                     break;
                 }
-                case SDL_KEYDOWN:
+                case SDL_EVENT_KEY_DOWN:
                 {
-                    switch (event.key.keysym.scancode)
+                    switch (event.key.scancode)
                     {
                         case SDL_SCANCODE_ESCAPE:
                             goto exit;
@@ -139,7 +135,7 @@ main(void)
 
         mouse_pressed_mask = SDL_GetMouseState(&mouse_x, &mouse_y);
 
-        if (mouse_pressed_mask & SDL_BUTTON(1))
+        if (mouse_pressed_mask & SDL_BUTTON_MASK(1))
         {
             if (!is_dragging_mouse)
             {
@@ -180,9 +176,7 @@ main(void)
         }
 
         u64 last_tick = sdl_context.ticks;
-        render_begin();
         glyph_draw();
-        render_end();
         printf("\x1b[2K\r%ldms", sdl_context.ticks - last_tick);
         fflush(stdout);
     }
